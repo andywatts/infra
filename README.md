@@ -8,21 +8,21 @@ Terraform infrastructure for GKE on Google Cloud Platform.
 gcp/
   org/                 # Project creation
   projects/dev/        # Dev cluster (us-west2, regional)
-    gke.tf            # GKE cluster
-    argocd-bootstrap.tf
+    gke.tf            # Regional GKE cluster
+    argocd-bootstrap.tf  # ArgoCD via Helm
 ```
 
 ## Deploy
 
 ```bash
 # Install tools
-brew install google-cloud-sdk terraform kubectl helm
+brew install google-cloud-sdk terraform
 
 # Authenticate
 gcloud auth login
 gcloud auth application-default login
 
-# Deploy
+# Deploy infrastructure
 cd gcp/org && terraform init && terraform apply
 cd ../projects/dev && terraform init && terraform apply
 ```
@@ -33,55 +33,48 @@ cd ../projects/dev && terraform init && terraform apply
 gcloud container clusters get-credentials dev-cluster \
   --region=us-west2 --project=development-690488
 
-kubectl get nodes
-kubectl get applications -n argocd
+kubectl get nodes  # Should show 3 nodes (one per zone: a, b, c)
 ```
 
-## Current Resources
+## Current Infrastructure
 
-| Resource | Location | Cost/mo |
-|----------|----------|---------|
-| GKE dev-cluster | us-west2 (regional) | ~$13 |
-| LoadBalancer | us-west2 | ~$18 |
-| External IP | us-west2 | ~$3 |
-| **Total** | | **~$34** |
+| Resource | Location | Status |
+|----------|----------|--------|
+| GKE dev-cluster | us-west2 (regional) | ✅ 3 nodes across 3 zones |
+| ArgoCD | us-west2 | ✅ GitOps platform |
+| Kong Gateway | us-west2 | ✅ API Gateway |
 
-**Node:** 1x e2-small (2 vCPU, 2GB RAM)
+**Cost:** ~$40/month (3x e2-small nodes + LoadBalancer)
 
 ## Applications
 
-Deployed via ArgoCD from [k8s-apps](https://github.com/andywatts/k8s-apps):
-- **sample-app**: Example nginx
-- **kong**: API Gateway
+Managed via ArgoCD from [k8s-apps](https://github.com/andywatts/k8s-apps):
+- **sample-app**: Nginx example
+- **kong**: API Gateway with Ingress Controller
 
 ## Configuration
 
-Edit region in `gcp/projects/dev/locals.tf`:
+Edit `gcp/projects/dev/locals.tf`:
 ```hcl
 locals {
   region = "us-west2"  # Regional cluster spans all zones
 }
 ```
 
-Scale nodes in `gcp/projects/dev/gke.tf`:
-```hcl
-resource "google_container_node_pool" "primary" {
-  node_count = 1  # Change here
-}
-```
-
 ## Useful Commands
 
 ```bash
-# View resources
-kubectl get pods -A
-kubectl get svc -A
+# View all resources
+kubectl get all -A
 
-# Scale cluster (per zone in regional cluster)
+# ArgoCD applications
+kubectl get applications -n argocd
+
+# Scale cluster
 gcloud container clusters resize dev-cluster --num-nodes=2 --region=us-west2
 
 # Update infrastructure
-cd gcp/projects/dev && terraform plan && terraform apply
+cd gcp/projects/dev && terraform apply
 ```
 
 ## Links
