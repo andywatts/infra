@@ -53,7 +53,7 @@ terraform apply
 
 This creates:
 - ✅ GCP project: `development-690488`
-- ✅ GKE cluster: `dev-cluster` (us-west2-a)
+- ✅ GKE cluster: `dev-cluster` (us-west1-a)
 - ✅ ArgoCD: GitOps deployment platform
 - ✅ Node pool: 1x e2-small node
 
@@ -61,9 +61,9 @@ This creates:
 
 | Resource | Location | Status | Purpose |
 |----------|----------|--------|---------|
-| GKE dev-cluster | us-west2-a | ✅ Active | Kubernetes cluster |
-| ArgoCD | us-west2-a | ✅ Active | GitOps platform |
-| Kong Gateway | us-west2-a | ✅ Active | API Gateway |
+| GKE dev-cluster | us-west1-a | ✅ Active | Kubernetes cluster |
+| ArgoCD | us-west1-a | ✅ Active | GitOps platform |
+| Kong Gateway | us-west1-a | ✅ Active | API Gateway |
 
 **Monthly Cost:** ~$34 (1 e2-small node + LoadBalancer)
 
@@ -74,7 +74,7 @@ Applications are deployed via ArgoCD from the [k8s-apps repository](https://gith
 ```bash
 # Connect to cluster
 gcloud container clusters get-credentials dev-cluster \
-  --zone=us-west2-a --project=development-690488
+  --zone=us-west1-a --project=development-690488
 
 # View deployed apps
 kubectl get applications -n argocd
@@ -93,7 +93,7 @@ Edit `gcp/org/locals.tf`:
 locals {
   project_id     = "development-690488"
   billing_account = "YOUR_BILLING_ACCOUNT_ID"
-  region         = "us-west2"
+  region         = "us-west1"
 }
 ```
 
@@ -117,7 +117,7 @@ resource "google_container_node_pool" "primary" {
 
 ```bash
 gcloud container clusters get-credentials dev-cluster \
-  --zone=us-west2-a --project=development-690488
+  --zone=us-west1-a --project=development-690488
 ```
 
 ### View Resources
@@ -148,7 +148,7 @@ terraform apply
 # Scale node pool
 gcloud container clusters resize dev-cluster \
   --num-nodes=2 \
-  --zone=us-west2-a
+  --zone=us-west1-a
 ```
 
 ## 📊 Cost Optimization
@@ -218,7 +218,7 @@ terraform destroy
 ```bash
 # Delete GKE cluster
 gcloud container clusters delete dev-cluster \
-  --zone=us-west2-a --quiet
+  --zone=us-west1-a --quiet
 
 # Delete project
 gcloud projects delete development-690488 --quiet
