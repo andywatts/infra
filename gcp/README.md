@@ -7,9 +7,9 @@ Infrastructure as Code for Google Cloud Platform.
 ```
 org/              # Creates GCP projects
   main.tf         # Project creation
-  locals.tf       # Region (us-west1), billing config
+  locals.tf       # Region (us-west2), billing config
 projects/dev/     # Dev environment resources
-  gke.tf          # GKE cluster (us-west1-a)
+  gke.tf          # GKE regional cluster
   argocd-bootstrap.tf  # ArgoCD installation
 ```
 
@@ -25,6 +25,6 @@ cd org && terraform init && terraform apply
 cd ../projects/dev && terraform init && terraform apply
 ```
 
-**Region:** us-west1 (Oregon)  
-**Zone:** us-west1-a
+**Region:** us-west2 (Los Angeles)  
+**Type:** Regional cluster (spans all zones: a, b, c)
 

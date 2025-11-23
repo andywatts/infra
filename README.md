@@ -7,7 +7,7 @@ Terraform infrastructure for GKE on Google Cloud Platform.
 ```
 gcp/
   org/                 # Project creation
-  projects/dev/        # Dev cluster (us-west1-a)
+  projects/dev/        # Dev cluster (us-west2, regional)
     gke.tf            # GKE cluster
     argocd-bootstrap.tf
 ```
@@ -31,7 +31,7 @@ cd ../projects/dev && terraform init && terraform apply
 
 ```bash
 gcloud container clusters get-credentials dev-cluster \
-  --zone=us-west1-a --project=development-690488
+  --region=us-west2 --project=development-690488
 
 kubectl get nodes
 kubectl get applications -n argocd
@@ -41,9 +41,9 @@ kubectl get applications -n argocd
 
 | Resource | Location | Cost/mo |
 |----------|----------|---------|
-| GKE dev-cluster | us-west1-a | ~$13 |
-| LoadBalancer | us-west1-a | ~$18 |
-| External IP | us-west1-a | ~$3 |
+| GKE dev-cluster | us-west2 (regional) | ~$13 |
+| LoadBalancer | us-west2 | ~$18 |
+| External IP | us-west2 | ~$3 |
 | **Total** | | **~$34** |
 
 **Node:** 1x e2-small (2 vCPU, 2GB RAM)
@@ -56,10 +56,10 @@ Deployed via ArgoCD from [k8s-apps](https://github.com/andywatts/k8s-apps):
 
 ## Configuration
 
-Edit region/zone in `gcp/projects/dev/locals.tf`:
+Edit region in `gcp/projects/dev/locals.tf`:
 ```hcl
 locals {
-  region = "us-west1"
+  region = "us-west2"  # Regional cluster spans all zones
 }
 ```
 
@@ -77,8 +77,8 @@ resource "google_container_node_pool" "primary" {
 kubectl get pods -A
 kubectl get svc -A
 
-# Scale cluster
-gcloud container clusters resize dev-cluster --num-nodes=2 --zone=us-west1-a
+# Scale cluster (per zone in regional cluster)
+gcloud container clusters resize dev-cluster --num-nodes=2 --region=us-west2
 
 # Update infrastructure
 cd gcp/projects/dev && terraform plan && terraform apply

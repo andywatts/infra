@@ -1,6 +1,6 @@
 resource "google_container_cluster" "primary" {
   name     = "dev-cluster"
-  location = "${local.region}-a"
+  location = local.region  # Regional cluster spans all zones
 
   initial_node_count       = 1
   remove_default_node_pool = true
