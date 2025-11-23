@@ -1,0 +1,77 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate.d/
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CDK
+*.swp
+cdk.out/
+.cdk.staging/
+cdk.context.json
+*.zip
+
+# Secrets and credentials
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+*-key.json
+*-credentials.json
+service-account*.json
+*.env
+.env*
+
+# AWS
+.aws/
+credentials
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+.npm
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+
+# Temp
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+
