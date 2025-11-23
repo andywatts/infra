@@ -48,9 +48,9 @@ kubectl get nodes  # Should show 3 nodes (one per zone: a, b, c)
 
 ## Applications
 
-Managed via ArgoCD from [k8s-apps](https://github.com/andywatts/k8s-apps):
-- **sample-app**: Nginx example
+Managed via ArgoCD from [k8s-infra](https://github.com/andywatts/k8s-infra):
 - **kong**: API Gateway with Ingress Controller
+- **sample-app**: Nginx example ([repo](https://github.com/andywatts/sample-app))
 
 ## Configuration
 
@@ -79,5 +79,6 @@ cd gcp/projects/dev && terraform apply
 
 ## Links
 
-- [k8s-apps repository](https://github.com/andywatts/k8s-apps)
+- [k8s-infra](https://github.com/andywatts/k8s-infra) - Platform services & ArgoCD config
+- [sample-app](https://github.com/andywatts/sample-app) - Example application
 - [GCP Console](https://console.cloud.google.com/)
